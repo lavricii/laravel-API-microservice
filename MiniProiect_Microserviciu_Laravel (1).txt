@@ -1,0 +1,83 @@
+
+Mini-Proiect Internship – Microserviciu Dummy /quote/{id} (Laravel + SQL)
+
+🎯 Scop:
+Construirea unui microserviciu Laravel care oferă un endpoint GET /quote/{id} ce returnează o ofertă de asigurare fictivă (mock) dintr-o bază de date locală.
+
+📦 Context real:
+Imităm comportamentul unui microserviciu care, într-un sistem mare de ofertare RCA/CASCO, primește un quote_id și returnează informațiile salvate anterior pentru ofertă.
+
+🧱 Structură generală:
+laravel-api-offers/
+├── app/
+│   ├── Http/Controllers/QuoteController.php
+│   ├── Models/Quote.php
+├── database/
+│   ├── migrations/2024_01_01_create_quotes_table.php
+│   └── seeders/QuoteSeeder.php
+├── routes/
+│   └── api.php
+└── .env (config DB)
+
+🔨 Pași de implementare:
+
+1. Inițializare proiect Laravel:
+composer create-project laravel/laravel laravel-api-offers
+cd laravel-api-offers
+
+2. Creare model + migrare + controller:
+php artisan make:model Quote -m
+php artisan make:controller QuoteController
+
+3. Structura bazei de date (migration):
+// database/migrations/xxxx_xx_xx_create_quotes_table.php
+public function up()
+{
+    Schema::create('quotes', function (Blueprint $table) {
+        $table->id();
+        $table->string('client_name');
+        $table->string('car_plate');
+        $table->string('insurer_name');
+        $table->decimal('price', 8, 2);
+        $table->timestamps();
+    });
+}
+
+4. Seed cu date mock:
+// database/seeders/QuoteSeeder.php
+DB::table('quotes')->insert([
+    ['client_name' => 'Ion Popescu', 'car_plate' => 'B123XYZ', 'insurer_name' => 'AsiguratorX', 'price' => 545.50],
+    ['client_name' => 'Maria Ionescu', 'car_plate' => 'CJ45ABC', 'insurer_name' => 'AsiguratorY', 'price' => 480.00],
+]);
+
+php artisan migrate --seed
+
+5. Definire rută:
+// routes/api.php
+Route::get('/quote/{id}', [QuoteController::class, 'show']);
+
+6. Logica în controller:
+// app/Http/Controllers/QuoteController.php
+public function show($id)
+{
+    $quote = \App\Models\Quote::find($id);
+    if (!$quote) {
+        return response()->json(['error' => 'Quote not found'], 404);
+    }
+    return response()->json($quote);
+}
+
+🧪 Testare:
+GET http://localhost:8000/api/quote/1
+
+Răspuns:
+{
+    "id": 1,
+    "client_name": "Ion Popescu",
+    "car_plate": "B123XYZ",
+    "insurer_name": "AsiguratorX",
+    "price": "545.50",
+    "created_at": "...",
+    "updated_at": "..."
+}
+

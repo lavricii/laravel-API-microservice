@@ -1,0 +1,216 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Quotes API",
+        "description": "API documentation for managing insurance quotes",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Local API Server"
+        }
+    ],
+    "paths": {
+        "/api/quote": {
+            "get": {
+                "tags": [
+                    "Quotes"
+                ],
+                "summary": "Get all quotes",
+                "operationId": "ab74e0752d1b3024b901a6d3f0cc130b",
+                "responses": {
+                    "200": {
+                        "description": "List of quotes retrieved successfully"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Quotes"
+                ],
+                "summary": "Create a new quote",
+                "operationId": "f0e5421b94a757da93f513f5dbd333bf",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "client_name",
+                                    "car_plate",
+                                    "asigurator",
+                                    "price"
+                                ],
+                                "properties": {
+                                    "client_name": {
+                                        "type": "string",
+                                        "example": "Ion Popescu"
+                                    },
+                                    "car_plate": {
+                                        "type": "string",
+                                        "example": "CJ99ABC"
+                                    },
+                                    "asigurator": {
+                                        "type": "string",
+                                        "example": "Groupama"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1250.5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Quote created successfully"
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                }
+            }
+        },
+        "/api/quote/search": {
+            "get": {
+                "tags": [
+                    "Quotes"
+                ],
+                "summary": "Search quotes by query parameter",
+                "operationId": "b314d6d2efd1b68576e18c2e427f89cb",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Search term (client name, plate, or insurer)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results returned successfully"
+                    }
+                }
+            }
+        },
+        "/api/quote/{identifier}": {
+            "get": {
+                "tags": [
+                    "Quotes"
+                ],
+                "summary": "Get a single quote by client name or car plate",
+                "operationId": "14a6a9e90dca3295617b99405b83b447",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "Client name or car plate number",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Quote found"
+                    },
+                    "404": {
+                        "description": "Quote not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Quotes"
+                ],
+                "summary": "Update a quote by identifier",
+                "operationId": "d970c21385ec58a6742df312d7acdf66",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "Client name or car plate number",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "client_name": {
+                                        "type": "string",
+                                        "example": "Ion Popescu"
+                                    },
+                                    "car_plate": {
+                                        "type": "string",
+                                        "example": "CJ99ABC"
+                                    },
+                                    "asigurator": {
+                                        "type": "string",
+                                        "example": "Allianz"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1300
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Quote updated successfully"
+                    }
+                }
+            }
+        },
+        "/api/quote/{id}": {
+            "delete": {
+                "tags": [
+                    "Quotes"
+                ],
+                "summary": "Delete a quote by ID",
+                "operationId": "086afe5a2aa27a2f85361c7bc75fd029",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Database primary ID of the quote",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Quote deleted successfully"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Quotes",
+            "description": "Endpoints for managing insurance quotes"
+        }
+    ]
+}
